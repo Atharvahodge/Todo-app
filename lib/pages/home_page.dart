@@ -17,6 +17,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    super.initState();
     // if these is the 1st time ever opening the app. then create default data
     if (_myBox.get("TODOLIST") == null) {
       db.createInitialData();
@@ -24,10 +25,13 @@ class _HomePageState extends State<HomePage> {
       // there alreday exists the data
       db.loadData();
     }
-    super.initState();
+
+    String? draftTask = _myBox.get("DRAFT_TASK") ?? "";
+
+    _controller = TextEditingController(text: draftTask);
   }
 
-  final _controller = TextEditingController();
+  late TextEditingController _controller;
 
   // for check box to check and dashed the task
   void checkBoxChanged(int index) {
@@ -42,7 +46,9 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       db.toDoList.add([_controller.text, false]);
       _controller.clear();
+      _myBox.delete("DRAFT_TASK");
     });
+    db.updateDataBase();
   }
 
   // to delete the task from the todo app
@@ -77,44 +83,71 @@ class _HomePageState extends State<HomePage> {
           );
         },
       ),
-      floatingActionButton: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: TextField(
-                controller: _controller,
-                cursorColor: Colors.grey.shade500,
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey.shade500),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey.shade500),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey.shade800,
-                  hintText: 'Add a new todo',
-                  hintStyle: TextStyle(
-                    color: Colors.grey.shade700,
-                    fontWeight: FontWeight.bold,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (_controller.text.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Draft",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: TextField(
+                      controller: _controller,
+                      onChanged: (value) {
+                        _myBox.put("DRAFT_TASK", value);
+                        setState(() {});
+                      },
+                      cursorColor: Colors.grey.shade500,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey.shade500),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey.shade500),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey.shade800,
+                        hintText: 'Add a new todo',
+                        hintStyle: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                FloatingActionButton(
+                  onPressed: saveNewTask,
+                  backgroundColor: Colors.grey.shade500,
+                  foregroundColor: Colors.grey.shade900,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
+                  ),
+                  child: Icon(Icons.add),
+                ),
+              ],
             ),
-          ),
-          FloatingActionButton(
-            onPressed: saveNewTask,
-            backgroundColor: Colors.grey.shade500,
-            foregroundColor: Colors.grey.shade900,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(22),
-            ),
-            child: Icon(Icons.add),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
