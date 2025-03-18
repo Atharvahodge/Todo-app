@@ -1,16 +1,29 @@
-# todo
+# Todo App
+A simple and efficent to-do app built with flutter. Manage your tasks with no efforts
 
-A new Flutter project.
+## Features
+- Add, Update, and Delete tasks
+- Mark tasks as complete or incomplete
+- Save unfinished tasks as drafts to  continue later
 
 ## Getting Started
+Follow these steps to set up the projects on your local machine :
 
-This project is a starting point for a Flutter application.
+### Prerequisites
+- Flutter SDK(v3.10 or later)
+- Dart SDK
+- Android Studio or VS code
 
-A few resources to get you started if this is your first Flutter project:
+### Installation 
+1. Clone the repository: https://github.com/YourUsername/todo-app.git
+2. Navigate to the project directory: cd todo-app
+3. Install dependencies: flutter pub get
+4. Run the app: flutter run
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Technologies Used
+- Flutter
+- Dart
+- Hive for local dat storage
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## License
+This project is licensed under the MIT License
